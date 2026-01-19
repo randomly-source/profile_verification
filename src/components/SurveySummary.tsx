@@ -99,12 +99,10 @@ export function SurveySummary({
         </main>
 
         {/* Footer Button */}
-        <div className="fixed bottom-20 left-0 right-0 px-6 bg-white border-t border-gray-100 py-4 z-40">
-          <div className="max-w-4xl mx-auto">
-            <Button variant="primary" fullWidth onClick={handleViewDetailsAgain} className="py-4">
-              View Details Again
-            </Button>
-          </div>
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[428px] px-6 bg-white border-t border-gray-100 py-4 z-40">
+          <Button variant="primary" fullWidth onClick={handleViewDetailsAgain} className="py-4">
+            View Details Again
+          </Button>
         </div>
       </div>
     );
@@ -126,7 +124,7 @@ export function SurveySummary({
       </header>
 
       {/* Progress Bar */}
-      <div className="sticky top-[73px] z-30 bg-white border-b border-gray-200">
+      <div className="sticky top-[65px] z-30 bg-white border-b border-gray-200">
         <div className="px-6 py-3 max-w-4xl mx-auto">
           <div className="mb-3">
             <h2 className="text-sm font-semibold text-gray-900">
@@ -567,12 +565,10 @@ export function SurveySummary({
       </main>
 
       {/* Footer Button */}
-      <div className="fixed bottom-20 left-0 right-0 px-6 bg-white border-t border-gray-100 py-4 z-40">
-        <div className="max-w-4xl mx-auto">
-          <Button variant="primary" fullWidth onClick={handleConfirmDetails} className="py-4">
-            Confirm Details
-          </Button>
-        </div>
+      <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[428px] px-6 bg-white border-t border-gray-100 py-4 z-40">
+        <Button variant="primary" fullWidth onClick={handleConfirmDetails} className="py-4">
+          Confirm Details
+        </Button>
       </div>
     </div>
   );
