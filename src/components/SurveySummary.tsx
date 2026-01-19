@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Button } from './ui/Button';
 import { Edit, Info, ClipboardCheck, CheckCircle } from 'lucide-react';
 import { sectionConfig } from '../data/sectionConfig';
@@ -26,28 +26,57 @@ export function SurveySummary({
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200; // Offset for sticky header + progress bar
+      // Sticky header height: header (65px) + progress bar (~112px) = 177px
+      const stickyHeaderHeight = 177;
+      const threshold = stickyHeaderHeight + 30; // Threshold for section detection
 
+      let currentIndex = 0;
+
+      // Check sections from bottom to top to find the last one that has passed the threshold
       for (let i = sectionConfig.length - 1; i >= 0; i--) {
         const section = sectionConfig[i];
         const element = sectionRefs.current[section.id];
         if (element) {
-          const elementTop = element.offsetTop;
-          if (scrollPosition >= elementTop) {
-            setCurrentSectionIndex(i);
+          const rect = element.getBoundingClientRect();
+          // If section's top has passed the threshold, this is the current section
+          if (rect.top <= threshold) {
+            currentIndex = i;
             break;
           }
         }
       }
+
+      setCurrentSectionIndex(currentIndex);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
+    // Use requestAnimationFrame for performance
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Delay initial check to ensure refs are set
+    const timeoutId = setTimeout(() => {
+      handleScroll();
+    }, 200);
+    handleScroll();
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
-  const progress = ((currentSectionIndex + 1) / sectionConfig.length) * 100;
+  const progress = useMemo(() => {
+    return ((currentSectionIndex + 1) / sectionConfig.length) * 100;
+  }, [currentSectionIndex]);
 
   const handleConfirmDetails = () => {
     setIsConfirmed(true);
